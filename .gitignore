@@ -1,0 +1,51 @@
+# Carpetas que no quiero subir
+olds/
+
+# Archivos sensibles
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.*
+credentials.*
+config.local.*
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Node / Web
+node_modules/
+dist/
+build/
+.next/
+.vite/
+
+# Logs
+*.log
+logs/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# VS Code opcional
+.vscode/
+
+# Bases de datos locales
+*.sqlite
+*.sqlite3
+*.db
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
