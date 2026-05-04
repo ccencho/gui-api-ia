@@ -3,7 +3,7 @@ olds/
 
 # Archivos sensibles
 .env
-.env.*
+#.env.*
 *.key
 *.pem
 *.p12
