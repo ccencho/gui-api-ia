@@ -1,4 +1,4 @@
-# Open chat API GUI - Deepseek
+# Open Chat API GUI - Interface Local - Deepseek
 
 Interfaz web local para trabajar con modelos de IA vía API, con proyectos, chats, búsqueda web, lectura de documentos, streaming, métricas de tokens y ejecución de código HTML/CSS/JS.
 
@@ -73,6 +73,18 @@ Actualmente se esta usando el api de deepseek , pero se pueden usar otras api.
   - Tiempo total de respuesta.
   - Tiempo de búsqueda web.
   - Tiempo de procesamiento de documentos.
+
+---
+
+<p align="center">
+  <img src="assets/interfaz-principal-codigo.png" alt="Vista principal de la interfaz" width="850">
+</p>
+
+
+
+<p align="center">
+  <img src="assets/interfaz-principal-naves.png" alt="Vista principal de la interfaz" width="850">
+</p>
 
 ---
 
