@@ -6,6 +6,10 @@ La versión actual está pensada para uso local, pruebas internas y experimentac
 
 ---
 
+<p align="center">
+  <img src="assets/interfaz-principal.png" alt="Vista principal de la interfaz" width="850">
+</p>
+
 ## Características principales
 
 ### Espacio conversacional organizado
