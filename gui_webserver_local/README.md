@@ -2,7 +2,7 @@
 
 Interfaz local con backend Node.js para usar DeepSeek API, búsqueda web con Tavily, modo de pensamiento profundo y documentos adjuntos.
 
-## Estructuras
+## Estructura
 
 - `server.js`: backend Node.js/Express.
 - `public/index.html`: interfaz.

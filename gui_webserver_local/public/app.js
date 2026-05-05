@@ -68,6 +68,7 @@ function cacheElements() {
   els.newChat = document.getElementById("newChat");
   els.createChatBtn = document.getElementById("createChatBtn");
   els.chatList = document.getElementById("chatList");
+  els.composerCard = document.querySelector(".composer-card");
   els.currentProjectTitle = document.getElementById("currentProjectTitle");
   els.currentChatTitle = document.getElementById("currentChatTitle");
   els.status = document.getElementById("status");
@@ -94,7 +95,7 @@ function bindEvents() {
   els.saveSettingsBtn.addEventListener("click", saveSettings);
   els.clearChatBtn.addEventListener("click", clearCurrentChat);
   els.createProjectBtn.addEventListener("click", createProject);
-  els.createChatBtn.addEventListener("click", createChat);
+  if (els.createChatBtn) els.createChatBtn.addEventListener("click", () => createChat());
   els.sendBtn.addEventListener("click", handleSendButtonAction);
   if (els.toggleSidebarBtn) els.toggleSidebarBtn.addEventListener("click", toggleSidebar);
   if (els.chat) els.chat.addEventListener("scroll", handleChatScroll, { passive: true });
@@ -117,6 +118,7 @@ function bindEvents() {
 
   els.attachBtn.addEventListener("click", () => els.documentInput.click());
   els.documentInput.addEventListener("change", handleDocumentSelection);
+  bindComposerDragAndDrop();
   if (els.closeSourcesDrawer) els.closeSourcesDrawer.addEventListener("click", closeSourcesDrawer);
   if (els.drawerOverlay) els.drawerOverlay.addEventListener("click", closeSourcesDrawer);
   if (els.closeCodePreview) els.closeCodePreview.addEventListener("click", closeCodePreviewModal);
@@ -145,9 +147,11 @@ function bindEvents() {
     if (event.key === "Enter") createProject();
   });
 
-  els.newChat.addEventListener("keydown", event => {
-    if (event.key === "Enter") createChat();
-  });
+  if (els.newChat) {
+    els.newChat.addEventListener("keydown", event => {
+      if (event.key === "Enter") createChat();
+    });
+  }
 
   els.messageInput.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -382,16 +386,17 @@ function createProject() {
   setStatus("Proyecto creado");
 }
 
-function createChat() {
-  const project = getCurrentProject();
-  const typedTitle = els.newChat.value.trim();
-  const title = typedTitle || "Nuevo chat";
-  const chat = createChatObject(title);
+function createChat(title = "Nuevo chat", projectId = state.currentProjectId) {
+  const project = state.projects[projectId] || getCurrentProject();
+  const typedTitle = els.newChat ? els.newChat.value.trim() : "";
+  const finalTitle = (typeof title === "string" && title.trim()) ? title.trim() : (typedTitle || "Nuevo chat");
+  const chat = createChatObject(finalTitle);
 
   project.chats[chat.id] = chat;
   project.currentChatId = chat.id;
+  state.currentProjectId = project.id;
   state.currentChatId = chat.id;
-  els.newChat.value = "";
+  if (els.newChat) els.newChat.value = "";
 
   saveState();
   renderAll();
@@ -430,7 +435,6 @@ function getCurrentChat() {
 
 function renderAll() {
   renderProjects();
-  renderChats();
   renderConversation();
   renderAttachedFiles();
 }
@@ -463,9 +467,12 @@ function renderProjects() {
   els.projectList.innerHTML = "";
 
   Object.values(state.projects).forEach(project => {
-    const div = document.createElement("div");
-    div.className = "project-item" + (project.id === state.currentProjectId ? " active" : "");
-    div.title = project.name;
+    const group = document.createElement("div");
+    group.className = "project-group" + (project.id === state.currentProjectId ? " expanded" : "");
+
+    const header = document.createElement("div");
+    header.className = "project-item" + (project.id === state.currentProjectId ? " active" : "");
+    header.title = project.name;
 
     const marker = document.createElement("span");
     marker.className = "project-marker";
@@ -491,57 +498,82 @@ function renderProjects() {
       openProjectMenu(event, project.id);
     });
 
-    div.appendChild(marker);
-    div.appendChild(title);
-    div.appendChild(count);
-    div.appendChild(menuButton);
-    div.addEventListener("click", () => selectProject(project.id));
-    els.projectList.appendChild(div);
+    header.appendChild(marker);
+    header.appendChild(title);
+    header.appendChild(count);
+    header.appendChild(menuButton);
+    header.addEventListener("click", () => selectProject(project.id));
+    group.appendChild(header);
+
+    if (project.id === state.currentProjectId) {
+      const nested = document.createElement("div");
+      nested.className = "project-chat-tree";
+
+      const newChatButton = document.createElement("button");
+      newChatButton.type = "button";
+      newChatButton.className = "tree-new-chat-btn";
+      newChatButton.innerHTML = "<span>✎</span><span>Nuevo chat</span>";
+      newChatButton.title = "Crear nuevo chat en este proyecto";
+      newChatButton.addEventListener("click", event => {
+        event.stopPropagation();
+        createChat("Nuevo chat", project.id);
+      });
+      nested.appendChild(newChatButton);
+
+      const chats = Object.values(project.chats || {}).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      chats.forEach(chat => nested.appendChild(createChatTreeItem(project, chat)));
+      group.appendChild(nested);
+    }
+
+    els.projectList.appendChild(group);
   });
 }
 
-function renderChats() {
-  const project = getCurrentProject();
-  els.chatList.innerHTML = "";
+function createChatTreeItem(project, chat) {
+  const div = document.createElement("div");
+  div.className = "chat-item tree-chat-item" + (chat.id === project.currentChatId ? " active" : "");
+  div.title = chat.title;
 
-  const chats = Object.values(project.chats || {}).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  const icon = document.createElement("span");
+  icon.className = "chat-icon";
+  icon.textContent = "•";
 
-  chats.forEach(chat => {
-    const div = document.createElement("div");
-    div.className = "chat-item" + (chat.id === project.currentChatId ? " active" : "");
-    div.title = chat.title;
+  const title = document.createElement("div");
+  title.className = "chat-item-title";
+  title.textContent = chat.title;
 
-    const icon = document.createElement("span");
-    icon.className = "chat-icon";
-    icon.textContent = "•";
+  const meta = document.createElement("span");
+  meta.className = "item-count chat-message-count";
+  const messageCount = Array.isArray(chat.messages) ? chat.messages.length : 0;
+  meta.textContent = String(messageCount);
+  meta.title = messageCount + (messageCount === 1 ? " mensaje" : " mensajes");
 
-    const title = document.createElement("div");
-    title.className = "chat-item-title";
-    title.textContent = chat.title;
-
-    const meta = document.createElement("span");
-    meta.className = "item-count chat-message-count";
-    const messageCount = Array.isArray(chat.messages) ? chat.messages.length : 0;
-    meta.textContent = String(messageCount);
-    meta.title = messageCount + (messageCount === 1 ? " mensaje" : " mensajes");
-
-    const menuButton = document.createElement("button");
-    menuButton.type = "button";
-    menuButton.className = "item-menu-button";
-    menuButton.textContent = "⋯";
-    menuButton.title = "Opciones del chat";
-    menuButton.addEventListener("click", event => {
-      event.stopPropagation();
-      openChatMenu(event, chat.id);
-    });
-
-    div.appendChild(icon);
-    div.appendChild(title);
-    div.appendChild(meta);
-    div.appendChild(menuButton);
-    div.addEventListener("click", () => selectChat(chat.id));
-    els.chatList.appendChild(div);
+  const menuButton = document.createElement("button");
+  menuButton.type = "button";
+  menuButton.className = "item-menu-button";
+  menuButton.textContent = "⋯";
+  menuButton.title = "Opciones del chat";
+  menuButton.addEventListener("click", event => {
+    event.stopPropagation();
+    state.currentProjectId = project.id;
+    state.currentChatId = chat.id;
+    project.currentChatId = chat.id;
+    openChatMenu(event, chat.id);
   });
+
+  div.appendChild(icon);
+  div.appendChild(title);
+  div.appendChild(meta);
+  div.appendChild(menuButton);
+  div.addEventListener("click", () => {
+    state.currentProjectId = project.id;
+    selectChat(chat.id);
+  });
+  return div;
+}
+
+function renderChats() {
+  // La navegación de chats ahora está integrada dentro de cada proyecto en renderProjects().
 }
 
 
@@ -1512,8 +1544,40 @@ function updateChatTitleFromFirstMessage(chat, text) {
   chat.title = clean.length > 42 ? clean.slice(0, 42) + "..." : clean;
 }
 
-function handleDocumentSelection(event) {
-  const incomingFiles = Array.from(event.target.files || []);
+function bindComposerDragAndDrop() {
+  const dropZone = els.composerCard || els.messageInput;
+  if (!dropZone) return;
+
+  let dragDepth = 0;
+
+  ["dragenter", "dragover"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+      event.preventDefault();
+      event.stopPropagation();
+      dragDepth += eventName === "dragenter" ? 1 : 0;
+      dropZone.classList.add("drag-over");
+    });
+  });
+
+  ["dragleave", "dragend"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+      event.preventDefault();
+      event.stopPropagation();
+      dragDepth = Math.max(0, dragDepth - 1);
+      if (dragDepth === 0 || eventName === "dragend") dropZone.classList.remove("drag-over");
+    });
+  });
+
+  dropZone.addEventListener("drop", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth = 0;
+    dropZone.classList.remove("drag-over");
+    addDocumentFiles(Array.from(event.dataTransfer?.files || []));
+  });
+}
+
+function addDocumentFiles(incomingFiles) {
   if (!incomingFiles.length) return;
 
   const allowedExtensions = ["txt", "md", "pdf", "docx"];
@@ -1528,9 +1592,15 @@ function handleDocumentSelection(event) {
     accepted.push(file);
   });
 
+  if (!accepted.length) return;
   selectedDocumentFiles = [...selectedDocumentFiles, ...accepted].slice(0, 5);
-  els.documentInput.value = "";
+  if (els.documentInput) els.documentInput.value = "";
   renderAttachedFiles();
+  setStatus(accepted.length + (accepted.length === 1 ? " documento adjunto" : " documentos adjuntos"));
+}
+
+function handleDocumentSelection(event) {
+  addDocumentFiles(Array.from(event.target.files || []));
 }
 
 function renderAttachedFiles() {
