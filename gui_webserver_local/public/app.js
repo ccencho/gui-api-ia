@@ -15,6 +15,7 @@ const AUTO_SCROLL_THRESHOLD = 120;
 let state = {
   currentProjectId: "general",
   currentChatId: "chat_general",
+  expandedProjectId: "general",
   settings: {
     model: "deepseek-v4-flash",
     deepThinking: false,
@@ -278,6 +279,13 @@ function migrateAndValidateState() {
     state.currentProjectId = "general";
   }
 
+  if (state.expandedProjectId === undefined) {
+    state.expandedProjectId = state.currentProjectId;
+  }
+  if (state.expandedProjectId !== null && !state.projects[state.expandedProjectId]) {
+    state.expandedProjectId = state.currentProjectId;
+  }
+
   const project = getCurrentProject();
   state.currentChatId = project.currentChatId;
 
@@ -379,6 +387,7 @@ function createProject() {
   state.projects[id] = createProjectObject(id, name);
   state.currentProjectId = id;
   state.currentChatId = state.projects[id].currentChatId;
+  state.expandedProjectId = id;
   els.newProject.value = "";
 
   saveState();
@@ -396,6 +405,7 @@ function createChat(title = "Nuevo chat", projectId = state.currentProjectId) {
   project.currentChatId = chat.id;
   state.currentProjectId = project.id;
   state.currentChatId = chat.id;
+  state.expandedProjectId = project.id;
   if (els.newChat) els.newChat.value = "";
 
   saveState();
@@ -405,12 +415,25 @@ function createChat(title = "Nuevo chat", projectId = state.currentProjectId) {
 }
 
 function selectProject(id) {
+  if (!state.projects[id]) return;
+
+  const wasCurrentProject = state.currentProjectId === id;
+  const wasExpanded = state.expandedProjectId === id;
+
   state.currentProjectId = id;
   const project = getCurrentProject();
   state.currentChatId = project.currentChatId;
+
+  if (wasCurrentProject && wasExpanded) {
+    state.expandedProjectId = null;
+    setStatus("Proyecto contraído");
+  } else {
+    state.expandedProjectId = id;
+    setStatus(wasCurrentProject ? "Proyecto desplegado" : "Proyecto seleccionado");
+  }
+
   saveState();
   renderAll();
-  setStatus("Proyecto seleccionado");
 }
 
 function selectChat(id) {
@@ -419,6 +442,7 @@ function selectChat(id) {
 
   project.currentChatId = id;
   state.currentChatId = id;
+  state.expandedProjectId = project.id;
   saveState();
   renderAll();
   setStatus("Chat seleccionado");
@@ -467,8 +491,9 @@ function renderProjects() {
   els.projectList.innerHTML = "";
 
   Object.values(state.projects).forEach(project => {
+    const isExpanded = project.id === state.expandedProjectId;
     const group = document.createElement("div");
-    group.className = "project-group" + (project.id === state.currentProjectId ? " expanded" : "");
+    group.className = "project-group" + (isExpanded ? " expanded" : "");
 
     const header = document.createElement("div");
     header.className = "project-item" + (project.id === state.currentProjectId ? " active" : "");
@@ -476,7 +501,7 @@ function renderProjects() {
 
     const marker = document.createElement("span");
     marker.className = "project-marker";
-    marker.textContent = project.id === state.currentProjectId ? "▾" : "▸";
+    marker.textContent = isExpanded ? "▾" : "▸";
 
     const title = document.createElement("div");
     title.className = "project-item-title";
@@ -505,7 +530,7 @@ function renderProjects() {
     header.addEventListener("click", () => selectProject(project.id));
     group.appendChild(header);
 
-    if (project.id === state.currentProjectId) {
+    if (isExpanded) {
       const nested = document.createElement("div");
       nested.className = "project-chat-tree";
 
@@ -724,6 +749,9 @@ function deleteProject(projectId) {
   if (!state.projects[state.currentProjectId]) {
     state.currentProjectId = state.projects.general ? "general" : Object.keys(state.projects)[0];
   }
+  if (state.expandedProjectId === projectId) {
+    state.expandedProjectId = state.currentProjectId || null;
+  }
 
   const currentProject = getCurrentProject();
   state.currentChatId = currentProject.currentChatId;
@@ -808,6 +836,7 @@ function moveChatToAnotherProject(chatId) {
 
   state.currentProjectId = targetProject.id;
   state.currentChatId = targetChatId;
+  state.expandedProjectId = targetProject.id;
   saveState();
   renderAll();
   setStatus("Chat movido a " + targetProject.name);
