@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IA Smelpro - Proyectos y chats</title>
+  <title>GUI para chats de IA con API</title>
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
 </head>
 <body>
   <div class="app">
     <aside id="sidebarPanel" class="sidebar-panel">
-      <h1>IA Smelpro</h1>
+      <h1>GUI para deepseek</h1>
       <div class="subtitle">
         Interfaz local con backend Node.js para usar DeepSeek, búsqueda web, pensamiento profundo y documentos.
       </div>
@@ -37,7 +37,8 @@
 
       <div class="section-title">Configuración del asistente</div>
       <label for="systemPrompt">Prompt del asistente</label>
-      <textarea id="systemPrompt" rows="6">Eres un asistente técnico y comercial para Smelpro S.A.C., empresa peruana especializada en IoT industrial, inteligencia artificial, automatización, LoRaWAN, ThingsBoard, medición de agua, energía y tracking. No inventes información si no tienes contexto suficiente. Responde de forma clara, precisa y profesional.</textarea>
+      <textarea id="systemPrompt" rows="6">Eres un asistente técnico, no inventes información si no tienes contexto suficiente. Responde de forma clara, precisa y profesional.
+Cuando uses búsqueda web, prioriza fuentes oficiales, documentación técnica, fabricantes, entidades públicas, papers o fuentes confiables. Si las fuentes son antiguas, incompletas o contradictorias, adviértelo.</textarea>
 
       <div class="btn-row">
         <button id="saveSettingsBtn">Guardar</button>
