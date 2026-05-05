@@ -1,16 +1,17 @@
-# IA Smelpro — Interfaz local de IA
+# Open chat API GUI - Deepseek
 
-IA Smelpro es una aplicación web local para trabajar con modelos de inteligencia artificial mediante integraciones por API. Ofrece una interfaz tipo ChatGPT/DeepSeek con proyectos, múltiples chats, búsqueda web, lectura de documentos, respuestas en streaming, bloques de código y métricas de uso.
+Interfaz web local para trabajar con modelos de IA vía API, con proyectos, chats, búsqueda web, lectura de documentos, streaming, métricas de tokens y ejecución de código HTML/CSS/JS.
 
 La versión actual está pensada para uso local, pruebas internas y experimentación. Todavía no es una plataforma multiusuario lista para producción.
 
+Actualmente se esta usando el api de deepseek , pero se pueden usar otras api.
 ---
 
 <p align="center">
   <img src="assets/interfaz-principal.png" alt="Vista principal de la interfaz" width="850">
 </p>
 
-## Características principales
+## Características principales 
 
 ### Espacio conversacional organizado
 
