@@ -1,89 +1,89 @@
-# IA Smelpro — Local AI Workspace
+# IA Smelpro — Interfaz local de IA
 
-IA Smelpro is a local web application for working with AI models through API integrations. It provides a ChatGPT-style interface with projects, multiple chats, web search, document reading, streaming responses, code blocks, and usage metrics.
+IA Smelpro es una aplicación web local para trabajar con modelos de inteligencia artificial mediante integraciones por API. Ofrece una interfaz tipo ChatGPT/DeepSeek con proyectos, múltiples chats, búsqueda web, lectura de documentos, respuestas en streaming, bloques de código y métricas de uso.
 
-The current version is designed for local/internal use and experimentation. It is not a production-ready multi-user platform yet.
+La versión actual está pensada para uso local, pruebas internas y experimentación. Todavía no es una plataforma multiusuario lista para producción.
 
 ---
 
-## Key Features
+## Características principales
 
-### Conversational workspace
+### Espacio conversacional organizado
 
-- Organize conversations by **projects** and **chats**.
-- Expand/collapse projects in a navigation panel.
-- Create, rename, move, and delete chats.
-- Rename and delete projects.
-- Keep chat history locally in the browser using `localStorage`.
+- Organización de conversaciones por **proyectos** y **chats**.
+- Navegación lateral con proyectos desplegables/contraíbles.
+- Creación, renombrado, movimiento y eliminación de chats.
+- Renombrado y eliminación de proyectos.
+- Historial guardado localmente en el navegador mediante `localStorage`.
 
-### AI model integration
+### Integración con modelos de IA
 
-- Connects to **DeepSeek API** through a local Node.js backend.
-- Supports base model selection.
-- Supports a **Deep Thinking** option when enabled by the backend/model payload.
-- Streams responses progressively, so answers appear while they are being generated.
+- Conexión con **DeepSeek API** mediante un backend local en Node.js.
+- Selección de modelo base.
+- Opción de **Pensamiento profundo**, según soporte del modelo y del payload enviado al backend.
+- Respuestas progresivas mediante streaming, para ver el texto mientras se genera.
 
-### Web search
+### Búsqueda web
 
-- Optional web search using **Tavily API**.
-- Automatic or manual selection of the number of search results.
-- Search results are shown in a compact chip such as `8 web pages`.
-- A right-side drawer displays the consulted sources.
-- Inline citations can open the source drawer.
+- Búsqueda web opcional usando **Tavily API**.
+- Selección automática o manual del número de resultados de búsqueda.
+- Resultados mostrados en un indicador compacto, por ejemplo: `8 páginas web`.
+- Panel lateral derecho para consultar las fuentes utilizadas.
+- Citas dentro de la respuesta que permiten abrir el panel de fuentes.
 
-### Document support
+### Soporte de documentos
 
-- Attach documents from the interface.
-- Drag and drop documents into the message box.
-- Supported initial formats:
+- Adjuntar documentos desde la interfaz.
+- Arrastrar y soltar documentos dentro del cuadro de escritura.
+- Formatos soportados inicialmente:
   - `.txt`
   - `.md`
   - `.pdf`
   - `.docx`
-- Documents are processed temporarily by the backend for the current request.
+- Los documentos se procesan temporalmente en el backend para usarse como contexto de la consulta actual.
 
-### Code generation support
+### Soporte para generación de código
 
-- Markdown rendering for responses.
-- Code blocks with syntax highlighting using Highlight.js.
-- Code block actions:
-  - Copy code
-  - Download code
-  - Execute HTML/CSS/JavaScript in a sandboxed preview iframe
-- Safe fallback rendering if syntax highlighting fails.
+- Renderizado Markdown para las respuestas.
+- Bloques de código con resaltado de sintaxis usando Highlight.js.
+- Acciones disponibles en bloques de código:
+  - Copiar código.
+  - Descargar código.
+  - Ejecutar HTML/CSS/JavaScript en una vista previa aislada mediante `iframe`.
+- Renderizado seguro de respaldo si falla el resaltado de sintaxis.
 
-### User experience
+### Experiencia de usuario
 
-- Visual themes: **Celestial**, **Dark**, and **Light**.
-- Centered reading layout.
-- Centered message composer.
-- Smart auto-scroll while streaming.
-- Stop button during response generation.
-- Copy and edit actions for user prompts.
-- Response metadata:
-  - Model used
-  - Web search status
-  - Token usage
-  - Time to first text
-  - Total response time
-  - Web search time
-  - Document processing time
-
----
-
-## Tech Stack
-
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js + Express
-- **AI API:** DeepSeek API
-- **Web Search:** Tavily API
-- **Document parsing:** `pdf-parse`, `mammoth`
-- **File upload:** `multer`
-- **Code highlighting:** Highlight.js via CDN
+- Temas visuales: **Celestial**, **Oscuro** y **Claro**.
+- Columna de lectura centrada.
+- Cuadro de escritura centrado.
+- Auto-scroll inteligente durante el streaming.
+- Botón para detener la generación de respuesta.
+- Acciones para copiar y editar prompts del usuario.
+- Metadatos por respuesta:
+  - Modelo usado.
+  - Estado de búsqueda web.
+  - Tokens utilizados.
+  - Tiempo hasta el primer texto.
+  - Tiempo total de respuesta.
+  - Tiempo de búsqueda web.
+  - Tiempo de procesamiento de documentos.
 
 ---
 
-## Project Structure
+## Tecnologías utilizadas
+
+- **Frontend:** HTML, CSS y JavaScript.
+- **Backend:** Node.js + Express.
+- **API de IA:** DeepSeek API.
+- **Búsqueda web:** Tavily API.
+- **Lectura de documentos:** `pdf-parse` y `mammoth`.
+- **Carga de archivos:** `multer`.
+- **Resaltado de código:** Highlight.js vía CDN.
+
+---
+
+## Estructura del proyecto
 
 ```text
 .
@@ -99,27 +99,27 @@ The current version is designed for local/internal use and experimentation. It i
     └── app.js
 ```
 
-### Main files
+### Archivos principales
 
-| File | Purpose |
+| Archivo | Descripción |
 |---|---|
-| `server.js` | Node.js backend, API routes, DeepSeek integration, Tavily search, document processing, streaming. |
-| `public/index.html` | Main HTML structure of the interface. |
-| `public/style.css` | Visual design, themes, layout, message styling, code block styling. |
-| `public/app.js` | Frontend logic: projects, chats, messages, rendering, drag & drop, streaming UI, code actions. |
-| `.env.example` | Example environment variables. |
-| `package.json` | Project metadata, scripts, and dependencies. |
+| `server.js` | Backend en Node.js. Contiene las rutas API, integración con DeepSeek, búsqueda Tavily, procesamiento de documentos y streaming. |
+| `public/index.html` | Estructura principal de la interfaz. |
+| `public/style.css` | Diseño visual, temas, layout, estilos de mensajes y bloques de código. |
+| `public/app.js` | Lógica del frontend: proyectos, chats, mensajes, renderizado, drag & drop, streaming y acciones sobre código. |
+| `.env.example` | Plantilla de variables de entorno. |
+| `package.json` | Metadatos, scripts y dependencias del proyecto. |
 
 ---
 
-## Requirements
+## Requisitos
 
-- Node.js **18 or higher**
-- npm
-- DeepSeek API key
-- Tavily API key, optional but required for web search
+- Node.js **18 o superior**.
+- npm.
+- API Key de DeepSeek.
+- API Key de Tavily, opcional pero necesaria para usar búsqueda web.
 
-Check your Node.js version:
+Verifica tu versión de Node.js:
 
 ```bash
 node -v
@@ -127,16 +127,16 @@ node -v
 
 ---
 
-## Installation
+## Instalación
 
-Clone the repository:
+Clona el repositorio:
 
 ```bash
-git clone https://github.com/YOUR_USER/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+cd TU_REPOSITORIO
 ```
 
-Install dependencies:
+Instala las dependencias:
 
 ```bash
 npm install
@@ -144,58 +144,58 @@ npm install
 
 ---
 
-## Environment Variables
+## Variables de entorno
 
-Create a `.env` file based on `.env.example`:
+Crea un archivo `.env` tomando como base `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-On Windows PowerShell, you can use:
+En Windows PowerShell puedes usar:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Then edit `.env`:
+Luego edita el archivo `.env`:
 
 ```env
-# DeepSeek API key
-DEEPSEEK_API_KEY=your_deepseek_api_key
+# Clave API de DeepSeek
+DEEPSEEK_API_KEY=tu_clave_deepseek
 
-# Tavily API key for web search
-TAVILY_API_KEY=your_tavily_api_key
+# Clave API de Tavily para búsqueda web
+TAVILY_API_KEY=tu_clave_tavily
 
-# Local port
+# Puerto local
 PORT=3010
 
-# DeepSeek endpoint
+# Endpoint de DeepSeek
 DEEPSEEK_API_URL=https://api.deepseek.com/chat/completions
 
-# Maximum extracted document characters sent as context
+# Cantidad máxima de caracteres extraídos de documentos y enviados como contexto
 MAX_DOCUMENT_CHARACTERS=30000
 ```
 
-Do not commit your `.env` file to GitHub.
+No subas tu archivo `.env` a GitHub.
 
 ---
 
-## Running the App
+## Ejecutar la aplicación
 
-Start the local server:
+Inicia el servidor local:
 
 ```bash
 npm run dev
 ```
 
-Then open:
+Luego abre en tu navegador:
 
 ```text
 http://localhost:3010
 ```
 
-To stop the server, press:
+Para detener el servidor, presiona:
 
 ```text
 Ctrl + C
@@ -203,166 +203,166 @@ Ctrl + C
 
 ---
 
-## How to Use
+## Cómo usar la aplicación
 
-### Create projects and chats
+### Crear proyectos y chats
 
-1. Create a project from the left navigation panel.
-2. Open the project to display its chats.
-3. Create a new chat inside the selected project.
-4. Use the `⋯` menu to rename, move, or delete chats.
+1. Crea un proyecto desde el panel lateral izquierdo.
+2. Abre el proyecto para visualizar sus chats.
+3. Crea un nuevo chat dentro del proyecto seleccionado.
+4. Usa el menú `⋯` para renombrar, mover o eliminar chats.
 
-### Use web search
+### Usar búsqueda web
 
-1. Enable **Intelligent Search** in the composer.
-2. Choose automatic search or a fixed number of results.
-3. Ask a question that requires updated information.
-4. Click the web results chip to see the sources.
+1. Activa **Búsqueda inteligente** en el cuadro de escritura.
+2. Selecciona búsqueda automática o un número fijo de resultados.
+3. Realiza una consulta que requiera información actualizada.
+4. Haz clic en el indicador de páginas web para revisar las fuentes consultadas.
 
-### Attach documents
+### Adjuntar documentos
 
-You can attach documents in two ways:
+Puedes adjuntar documentos de dos formas:
 
-- Click the attach button.
-- Drag and drop a supported file into the message box.
+- Haciendo clic en el botón de adjuntar.
+- Arrastrando y soltando un archivo compatible dentro del cuadro de escritura.
 
-The backend extracts text from the document and sends it as context for the current request.
+El backend extrae texto del documento y lo envía como contexto para la consulta actual.
 
-### Generate and run code
+### Generar, copiar, descargar y ejecutar código
 
-When the model returns a code block, the interface can:
+Cuando el modelo devuelve un bloque de código, la interfaz permite:
 
-- Copy the code
-- Download the code as a file
-- Execute HTML/CSS/JavaScript in a sandboxed preview
+- Copiar el código.
+- Descargarlo como archivo.
+- Ejecutar HTML/CSS/JavaScript en una vista previa aislada.
 
-Execution is intended only for browser-side code examples.
+La ejecución está pensada únicamente para ejemplos de código de navegador.
 
 ---
 
-## Data Storage and Privacy
+## Almacenamiento de datos y privacidad
 
-This project currently stores user-facing chat data locally in the browser.
+Actualmente, el proyecto guarda los datos visibles del usuario localmente en el navegador.
 
-| Data | Where it is stored |
+| Dato | Dónde se almacena |
 |---|---|
-| Projects | Browser `localStorage` |
-| Chats | Browser `localStorage` |
-| Messages | Browser `localStorage` |
-| Visual settings | Browser `localStorage` |
-| API keys | `.env` file on the backend machine |
-| Uploaded files | Processed temporarily in memory by the backend |
-| Extracted document text | Sent to the AI provider as context for the request |
+| Proyectos | `localStorage` del navegador. |
+| Chats | `localStorage` del navegador. |
+| Mensajes | `localStorage` del navegador. |
+| Configuración visual | `localStorage` del navegador. |
+| API Keys | Archivo `.env` en la máquina donde corre el backend. |
+| Archivos adjuntos | Procesados temporalmente en memoria por el backend. |
+| Texto extraído de documentos | Enviado al proveedor de IA como contexto de la consulta. |
 
-Important notes:
+Notas importantes:
 
-- DeepSeek does not automatically know your project history. The application sends the relevant chat history as context.
-- Attached files are not stored permanently by this application in the current version.
-- If a response contains sensitive document content, that response may remain in the browser history through `localStorage`.
-- This application does not currently include login, user roles, database persistence, or encrypted chat storage.
-
----
-
-## Security Notes
-
-This project is suitable for local testing and internal experimentation.
-
-Before using it in production or with multiple users, consider adding:
-
-- User authentication
-- Role-based access control
-- Database-backed storage
-- Encrypted secrets management
-- Server-side session handling
-- Audit logs
-- Backups
-- Rate limits
-- Per-user token limits
-- File retention policy
-- Deployment hardening
-
-Do not expose this application publicly without additional security controls.
+- DeepSeek no conoce automáticamente el historial de tus proyectos. La aplicación envía el historial relevante como contexto en cada consulta.
+- Los archivos adjuntos no se guardan permanentemente en esta versión.
+- Si una respuesta contiene información sensible de un documento, esa respuesta puede quedar guardada en el historial local del navegador mediante `localStorage`.
+- Esta aplicación todavía no incluye login, roles de usuario, base de datos persistente ni cifrado del historial.
 
 ---
 
-## Troubleshooting
+## Notas de seguridad
 
-### `npm` is blocked on Windows PowerShell
+Este proyecto es adecuado para pruebas locales y experimentación interna.
 
-If PowerShell blocks npm scripts, use:
+Antes de usarlo en producción o con múltiples usuarios, considera agregar:
+
+- Autenticación de usuarios.
+- Control de acceso por roles.
+- Almacenamiento en base de datos.
+- Gestión segura y cifrada de secretos.
+- Manejo de sesiones en servidor.
+- Logs de auditoría.
+- Backups.
+- Límites de uso.
+- Límites de tokens por usuario.
+- Política de retención de archivos.
+- Endurecimiento del despliegue.
+
+No expongas esta aplicación públicamente sin controles adicionales de seguridad.
+
+---
+
+## Solución de problemas
+
+### `npm` está bloqueado en Windows PowerShell
+
+Si PowerShell bloquea los scripts de npm, puedes usar:
 
 ```powershell
 npm.cmd install
 npm.cmd run dev
 ```
 
-Or adjust your PowerShell execution policy for your user.
+O ajustar la política de ejecución de PowerShell para tu usuario.
 
-### Port already in use
+### El puerto ya está en uso
 
-If port `3010` is already being used, change the port in `.env`:
+Si el puerto `3010` ya está siendo usado, cambia el puerto en `.env`:
 
 ```env
 PORT=3020
 ```
 
-Then restart the server.
+Luego reinicia el servidor.
 
-### Web search does not work
+### La búsqueda web no funciona
 
-Check:
+Verifica:
 
-1. `TAVILY_API_KEY` exists in `.env`.
-2. The backend was restarted after editing `.env`.
-3. Web search is enabled in the interface.
+1. Que `TAVILY_API_KEY` exista en `.env`.
+2. Que hayas reiniciado el backend después de editar `.env`.
+3. Que la búsqueda web esté activada en la interfaz.
 
-You can also check the health endpoint:
+También puedes revisar el endpoint de salud:
 
 ```text
 http://localhost:3010/api/health
 ```
 
-### Responses do not appear in real time
+### Las respuestas no aparecen progresivamente
 
-Make sure you are using the current version with streaming enabled and that the backend route `/api/chat-stream` is working.
+Verifica que estés usando una versión con streaming habilitado y que la ruta `/api/chat-stream` esté funcionando correctamente.
 
-### Documents are not processed
+### Los documentos no se procesan
 
-Check that the file type is supported and that the file size is within the backend limits.
-
----
-
-## Current Limitations
-
-- Chat history is stored in browser `localStorage`, not in a database.
-- No authentication or multi-user management.
-- No permanent document library.
-- Web search quality depends on the search provider and query quality.
-- Running code is limited to HTML/CSS/JavaScript previews in a browser iframe.
-- Python, Node.js, or system-level code execution is not supported for safety reasons.
+Verifica que el tipo de archivo sea compatible y que el tamaño esté dentro del límite configurado en el backend.
 
 ---
 
-## Suggested Roadmap
+## Limitaciones actuales
 
-- Add authentication and users.
-- Store projects and chats in PostgreSQL or SQLite.
-- Add persistent document library per project.
-- Add project-level prompts or memories.
-- Add admin panel for token usage and cost control.
-- Add model provider selection.
-- Add export/import of projects and chats.
-- Add deployment guide for AWS EC2.
-- Add Docker support.
+- El historial se guarda en `localStorage`, no en una base de datos.
+- No hay autenticación ni administración multiusuario.
+- No existe una biblioteca documental permanente.
+- La calidad de la búsqueda web depende del proveedor de búsqueda y de la consulta enviada.
+- La ejecución de código está limitada a HTML/CSS/JavaScript en un `iframe` del navegador.
+- No se permite ejecución de Python, Node.js u otros lenguajes de sistema por razones de seguridad.
 
 ---
 
-## License
+## Roadmap sugerido
 
-Add a license before publishing publicly. If you are unsure, start with an internal/private repository first or use a standard open-source license such as MIT only after reviewing whether you want others to reuse the code.
+- Agregar autenticación y usuarios.
+- Guardar proyectos y chats en PostgreSQL o SQLite.
+- Crear una biblioteca documental persistente por proyecto.
+- Agregar prompts o memorias por proyecto.
+- Crear un panel administrativo para tokens y costos.
+- Agregar selección de proveedor/modelo de IA.
+- Exportar e importar proyectos y chats.
+- Agregar guía de despliegue en AWS EC2.
+- Agregar soporte para Docker.
 
 ---
 
-## Disclaimer
+## Licencia
 
-This is an experimental local AI interface. Review AI-generated content before using it for technical, legal, financial, commercial, or operational decisions.
+Agrega una licencia antes de publicar el repositorio como público. Si no estás seguro, empieza con un repositorio privado o interno. Usa una licencia estándar como MIT solo si tienes claro que deseas permitir que otros reutilicen el código.
+
+---
+
+## Aviso
+
+Esta es una interfaz experimental local de IA. Revisa siempre el contenido generado por IA antes de usarlo en decisiones técnicas, legales, financieras, comerciales u operativas.
