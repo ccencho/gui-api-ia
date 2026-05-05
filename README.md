@@ -57,6 +57,11 @@ Actualmente se esta usando el api de deepseek , pero se pueden usar otras api.
   - Ejecutar HTML/CSS/JavaScript en una vista previa aislada mediante `iframe`.
 - Renderizado seguro de respaldo si falla el resaltado de sintaxis.
 
+<p align="center">
+  <img src="assets/interfaz-principal-codigo.png" alt="Vista principal de la interfaz" width="850">
+</p>
+
+
 ### Experiencia de usuario
 
 - Temas visuales: **Celestial**, **Oscuro** y **Claro**.
@@ -73,13 +78,6 @@ Actualmente se esta usando el api de deepseek , pero se pueden usar otras api.
   - Tiempo total de respuesta.
   - Tiempo de búsqueda web.
   - Tiempo de procesamiento de documentos.
-
----
-
-<p align="center">
-  <img src="assets/interfaz-principal-codigo.png" alt="Vista principal de la interfaz" width="850">
-</p>
-
 
 
 <p align="center">
